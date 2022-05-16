@@ -1,12 +1,12 @@
 a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z = 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 
 consonants = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'}
-composite_consonants = {"sh":{"ch"},"ch":{"sh"},"th":{d},"zz":{z,t+z},"ll":{l}}
+composite_consonants = {"sh":{"ch"},"ch":{"sh"},"th":{d},"zz":{z,t+z},"ll":{l}, "ss":{s},"cu":q}
 
-similar_sound = {"":{e}, a:{e,i},b:{p},c:{s,k,q},d:{t},e:{a,y,""},f:{v},g:{j},h:{e,""},i:{e,a,y},j:{j},k:{c,q},l:{r},m:{n},n:{m},o:{u},p:{b},q:{c,k},r:{l},s:{c,z},t:{d,z},u:{y,o,a},v:{f,b},w:{v},x:{s,c,k},y:{i,e,u}, z:{s}}
+similar_sound = {"":{e}, a:{e,i},b:{p,v},c:{s,k},d:{},e:{a,y,""},f:{v},g:{j},h:{e,""},i:{e,a,y},j:{j},k:{c,q},l:{r},m:{n},n:{m},o:{u},p:{b},q:{c+u,k+u},r:{l},s:{c,z},t:{z},u:{y,o,a},v:{f,b},w:{v},x:{s,c,k},y:{i,e,u}, z:{s}}
 
 vowels = {'a', 'e', 'i', 'o', 'u'}
-composite_vowels = {"au":{o},"ae":{e}, "ea":{e},"oe":{e},"ie":{e},"eau":{o},"eo":{"yo"}, "io":{"yo"}}
+composite_vowels = {"au":{o,u},"ae":{e}, "ea":{e,""},"oe":{e,""},"ie":{e,""},"eo":{"yo"}, "io":{"yo"},"oo":{o},"ee":{e,""}}
 
 
 
@@ -53,7 +53,7 @@ def next_syllable(word, i):
             i += 1
 
 
-        while i + 2*len(syllable) <= n and (word[i:i + 2*len(syllable)] == 2*syllable):
+        while i + len(syllable) <= n and (word[i:i + len(syllable)] == syllable):
             i += len(syllable)
 
 
@@ -66,25 +66,26 @@ def next_syllable(word, i):
                 vowel += word[i]
                 i += 1
 
-            while i + 2*len(vowel) <= n and (word[i:i + 2*len(vowel)] == 2*vowel):
-                i += len(syllable)
+            while i + len(vowel) <= n and (word[i:i + len(vowel)] == vowel):
+                i += len(vowel)
 
             syllable += vowel
 
     else:
         i += 1
 
-        """if i < n and word[i] in consonants:
-            consonant = word[i]
+        if i < n and word[i] in vowels:
+            vowel = word[i]
+
             i += 1
 
-            while i < n and (consonant + word[i] in consonants or consonant + word[i] in composite_consonants):
-                consonant += word[i]
+            while i < n and (vowel + word[i] in vowels or vowel + word[i] in composite_vowels):
+                vowel += word[i]
                 i += 1
 
-            while i + 2*len(consonant) <= n and (word[i:i + 2*len(consonant)] == 2*consonant):
+            while i + 1 <= n and (word[i] == vowel[-1]):
                 i += len(syllable)
-            syllable += consonant"""
+            syllable = vowel
 
     return syllable, i
 
@@ -131,30 +132,43 @@ def dis(word1,word2):
 
 
         if char1 != char2:
+            similar = 0
+            count = 0
+
             if char1 in similar_sound:
-                if char2 in similar_sound:
-                    d += 2*(char2 not in similar_sound[char1]) + (char1 not in similar_sound[char2])
+                similar += char2 not in similar_sound[char1]
+                count += 1
+
+
+            if char2 in similar_sound and f!=d:
+                similar += char1 not in similar_sound[char2]
+                count+=1
 
 
             if char1 in composite_vowels:
-                if char2 in composite_vowels:
-                    d+= composite_vowels[char1] != composite_vowels[char2]
-                else:
-                    d += char2 != composite_vowels[char1]
+                similar += char2 not in composite_vowels[char1]
+                count += 1
 
-            elif char2 in composite_vowels:
-                d += char1 != composite_vowels[char2]
+            if char2 in composite_vowels:
+                similar += char1 not in composite_vowels[char2]
+                count += 1
 
 
             if char1 in composite_consonants:
-                d+= char2 not in composite_consonants[char1]
+                similar += char2 not in composite_consonants[char1]
+                count += 1
 
 
             if char2 in composite_consonants:
-                d+= char1 not in composite_consonants[char2]
+                similar += char1 not in composite_consonants[char2]
+                count += 1
+
+            if similar == count:
+                d += 1
 
         else:
-            d-=1
+            d -= 1
+
     return d
 
 
@@ -183,14 +197,14 @@ def distance(word1,word2):
         d+= dis("", syllables2[n])
 
 
-    return d + (m-n)
+    return d
 
 def closest_word(target_word, dictionary):
 
     return min(dictionary , key = lambda word:distance(word, target_word))
 
 
-word1, word2 = "sush", "sum"
+word1, word2 = "bbbbbbbbbbbbbbeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaauuuuuuuuuuuuuuuuuuuuutttttttttttttttttiiiiiiiiiiiiiiiiiiiiifffffffffffffffffffuuuuuuuuuuuuuuuuuuuuulllllllllllllllll", "beautiful"
 #print(syllables(word1), syllables(word2))
 
 #print(distance(word1, word2))
