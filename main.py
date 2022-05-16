@@ -1,25 +1,17 @@
 import os
+from autocorrect import english_dictionary, correct
 from time import perf_counter_ns
 from syllables import closest_word
 
 words = "words"
 
+english = english_dictionary()
 
-path = os.getcwd() + "/";
-
-ENGLISH = "languages/english/"
-
-english = {"words":set()}
-
-with open(path + ENGLISH + words) as f:
-    english[words] = set(f.read().split("\n"))
-
-    
-word = "splendide"
+sentence = "i hav such a botifol viow from my chambre"
 
 start = perf_counter_ns()
 
-print(closest_word(word, english[words]))
+print(correct(sentence, english[words]))
 
 print((perf_counter_ns() - start)/1_000_000_000)
 
