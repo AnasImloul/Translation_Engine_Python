@@ -3,7 +3,7 @@ a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z = '
 consonants = {'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'}
 composite_consonants = {"sh":{"ch"},"ch":{"sh"},"th":{d},"zz":{z,t+z},"ll":{l}}
 
-similar_sound = {"":{e}, a:{e,i},b:{p},c:{s,k,q},d:{t},e:{a,i,y,""},f:{v},g:{j},h:{e,""},i:{e,a,y},j:{j},k:{c,q},l:{r},m:{n},n:{m},o:{u},p:{b},q:{c,k},r:{l},s:{c,z},t:{d,z},u:{y,o,a},v:{f,b},w:{v},x:{s,c,k},y:{i,e,u}, z:{s}}
+similar_sound = {"":{e}, a:{e,i},b:{p},c:{s,k,q},d:{t},e:{a,y,""},f:{v},g:{j},h:{e,""},i:{e,a,y},j:{j},k:{c,q},l:{r},m:{n},n:{m},o:{u},p:{b},q:{c,k},r:{l},s:{c,z},t:{d,z},u:{y,o,a},v:{f,b},w:{v},x:{s,c,k},y:{i,e,u}, z:{s}}
 
 vowels = {'a', 'e', 'i', 'o', 'u'}
 composite_vowels = {"au":{o},"ae":{e}, "ea":{e},"oe":{e},"ie":{e},"eau":{o},"eo":{"yo"}, "io":{"yo"}}
@@ -148,13 +148,10 @@ def dis(word1,word2):
 
             if char1 in composite_consonants:
                 d+= char2 not in composite_consonants[char1]
-                
+
 
             if char2 in composite_consonants:
                 d+= char1 not in composite_consonants[char2]
-            
-            
-
 
         else:
             d-=1
@@ -194,6 +191,6 @@ def closest_word(target_word, dictionary):
 
 
 word1, word2 = "sush", "sum"
-print(syllables(word1), syllables(word2))
+#print(syllables(word1), syllables(word2))
 
-print(distance(word1, word2))
+#print(distance(word1, word2))
