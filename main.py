@@ -1,5 +1,4 @@
 import os
-#from autocorrect import closest_word
 from time import perf_counter_ns
 from syllables import closest_word
 
@@ -15,10 +14,8 @@ english = {"words":set()}
 with open(path + ENGLISH + words) as f:
     english[words] = set(f.read().split("\n"))
 
-print(len(english[words]))
-
+    
 word = "splendide"
-
 
 start = perf_counter_ns()
 
