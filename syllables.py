@@ -9,101 +9,107 @@ vowels = {'a', 'e', 'i', 'o', 'u'}
 composite_vowels = {"au":{o,u},"ae":{e}, "ea":{e,""},"oe":{e,""},"ie":{e,""},"eo":{"yo"}, "io":{"yo"},"oo":{o},"ee":{e,""}}
 
 
+vowels = {"a","e","i","u","o"}
 
 
-def clean(word):
 
-    word = word.lower()
-
+def clean_redundancy(word):
     result = ""
-
-    n = len(word)
+    current = word[0]
+    count = 0
 
     i = 0
 
+    n = len(word)
+
     while i < n:
-
-        if i+1 < n and word[i + 1] == word[i]:
-            result += word[i + 1] + word[i]
-
-            i += 1
-
-            while i + 1 < n and word[i + 1] == word[i]:
-                i += 1
+        if current == word[i]:
+            if count == 2 - (word[i] in vowels):
+                i+=1
+                continue
+            result += word[i]
+            count += 1
+            i+=1
 
         else:
-            result += word[i]
-
-        i += 1
-
+            current = word[i]
+            count = 0
     return result
 
 
-def next_syllable(word, i):
-    syllable = word[i]
-
-    n = len(word)
-
-    if word[i] in consonants:
-
-        i += 1
-
-        while i < n and (syllable + word[i] in consonants or syllable + word[i] in composite_consonants):
-            syllable += word[i]
-            i += 1
-
-
-        while i + len(syllable) <= n and (word[i:i + len(syllable)] == syllable):
-            i += len(syllable)
-
-
-        if i < n and word[i] in vowels:
-            vowel = word[i]
-            i += 1
-
-
-            while i < n and (vowel + word[i] in vowels or vowel + word[i] in composite_vowels):
-                vowel += word[i]
-                i += 1
-
-            while i + len(vowel) <= n and (word[i:i + len(vowel)] == vowel):
-                i += len(vowel)
-
-            syllable += vowel
-
-    else:
-        i += 1
-
-        if i < n and word[i] in vowels:
-            vowel = word[i]
-
-            i += 1
-
-            while i < n and (vowel + word[i] in vowels or vowel + word[i] in composite_vowels):
-                vowel += word[i]
-                i += 1
-
-            while i + 1 <= n and (word[i] == vowel[-1]):
-                i += len(syllable)
-            syllable = vowel
-
-    return syllable, i
-
 
 def syllables(word):
-    word = clean(word)
+
 
     n = len(word)
 
-    s = []
+    vowel_sound = False
+    current,count = word[0],0
 
     i = 0
+
+    _syllables_ = []
+
+    syllable = ""
+
+    is_vowel = False
+
     while i < n:
-        syllable, i = next_syllable(word, i)
 
-        s.append(syllable)
+        char = word[i]
 
-    return s
+        if current == char:
+            if count == 2 - is_vowel:
+                i += 1
+                continue
+            count += 1
+
+        else:
+            current = char
+            count = 1
+
+
+        if not char.isalpha():
+            i += 1
+            continue
+
+        # if current character is a vowel
+        if char in vowels or (char == "y" and not vowel_sound):
+            is_vowel = True
+            vowel_sound = True
+            syllable += char
+
+
+        # if current character is a consonant
+        else :
+            is_vowel = False
+
+            next_consonant = (i + 1 == n or (word[i+1] == "y" and word[i+1] != char))
+
+            if next_consonant or not vowel_sound:
+                syllable += char
+
+            if vowel_sound:
+                _syllables_.append(syllable)
+                syllable = "" if next_consonant else char
+                vowel_sound = False
+        i += 1
+
+    if syllable != "":
+        if not vowel_sound:
+            if syllable:
+                _syllables_[-1] += syllable
+            else:
+                _syllables_.append(syllable)
+
+        else:
+            if syllable[-1] == "e":
+                syllable = syllable[:-1]
+
+            _syllables_.append(syllable)
+
+    return _syllables_
+
 
 
 def dis(word1,word2):
