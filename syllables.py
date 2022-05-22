@@ -7,7 +7,6 @@ composite_consonants = {
     "ck": {"k": 1, "q": 1},
     "ng": {"n": 1, "g": 1},
     "sk": {"sc": 2},
-    #"ss" : {"s":1}
 }
 
 consonants = {
