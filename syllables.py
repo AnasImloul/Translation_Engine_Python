@@ -67,18 +67,19 @@ def distance_vowels(vowel1, vowel2):
 
     if vowel1 == "y":
         if vowel2 in composite_vowels:
-            intersect = composite_vowels[vowel2].keys() + vowel1.key()
+            intersect = composite_vowels[vowel2].keys() | y.keys()
             for vowel in intersect:
-                d = min(d, y[vowel], composite_vowels[vowel2][vowel])
+                d = min(d, y.get(vowel,d), composite_vowels[vowel2].get(vowel,d))
         else:
             d = y.get(vowel2,d)
         return d
 
     if vowel2 == "y":
         if vowel1 in composite_vowels:
-            intersect = composite_vowels[vowel1].keys() + vowel2.key()
+            intersect = composite_vowels[vowel1].keys() | y.keys()
             for vowel in intersect:
-                d = min(d, y[vowel], composite_vowels[vowel1][vowel])
+                d = min(d, y.get(vowel, d), composite_vowels[vowel1].get(vowel, d))
+
         else:
             d = y.get(vowel1,d)
         return d
@@ -267,7 +268,21 @@ def distance(word1, word2):
 
 
 def closest_word(target_word, dictionary):
-    return min(dictionary, key=lambda word: distance(word, target_word))
+    closest = None
+    if target_word in dictionary:
+        return target_word
+
+    min_distance = 999_999_999
+    for word in dictionary:
+        d = distance(word, target_word)
+        if d < min_distance:
+            min_distance = d
+            closest = word
+
+        if d <= len(target_word):
+            return word
+
+    return closest
 
 
 if __name__ == "__main__":
