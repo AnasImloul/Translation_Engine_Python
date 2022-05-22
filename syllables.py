@@ -12,27 +12,14 @@ composite_consonants = {
 
 consonants = {
     'b': {"p": 3, "v": 3},
-    'c': {},
-    'd': {},
-    'f': {},
-    'g': {},
-    'h': {},
-    'j': {},
-    'k': {},
-    'l': {},
-    'm': {},
-    'n': {},
-    'p': {},
     'q': {"c": 2, "k": 3},
-    'r': {},
     's': {"c": 3, "z": 2},
-    't': {},
-    'v': {},
-    'w': {},
-    'x': {},
-    'y': {},
     'z': {"s": 2}
 }
+
+for char in "bcdfghjklmnpqrstvwxyz":
+    if char not in consonants:
+        consonants[char] = dict()
 
 _consonants_ = consonants.keys() | composite_consonants.keys()
 
@@ -288,10 +275,5 @@ if __name__ == "__main__":
     from time import perf_counter
 
     start = perf_counter()
-
-    print(syllables("s"))
-    print(syllables("ss"))
-    print(distance("ss", "s"))
-    print(distance("pose","pusi"))
 
     print(perf_counter() - start)
