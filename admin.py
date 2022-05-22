@@ -3,7 +3,7 @@ from json.decoder import JSONDecodeError
 from os import getcwd, listdir, mkdir
 from shutil import rmtree
 from os.path import isdir, exists
-from colorama import Fore, Style
+import styleIO as style
 from time import perf_counter,sleep
 from sys import stdin, stdout
 from threading import Lock
@@ -51,47 +51,47 @@ def remove_extension(file):
 
 
 def WrongArgumentError():
-    print(Fore.RED + f"Error : Invalid arguments.\nfor more information type 'help'.\n" + Style.RESET_ALL)
+    print(style.RED + f"Error : Invalid arguments.\nfor more information type 'help'.\n" + style.RESET)
 
 def WrongPathError():
-    print(Fore.RED + "Error : You're not allowed to show words while working on this directory\n" + Style.RESET_ALL)
+    print(style.RED + "Error : You're not allowed to show words while working on this directory\n" + style.RESET)
 
 def WrongCommandError():
     if path[-1] == "languages":
         WrongLanguageError()
         print("Available languages -> ")
         if not show_languages({"command": "*", "parameters": {}}, printable = False):
-            print(Fore.RED + "None\n")
+            print(style.RED + "None\n")
         else:
             show_languages({"command": "*", "parameters": {}}, printable=True)
 
     else:
-        print(Fore.RED + "Error : Invalid command\n" + Style.RESET_ALL)
+        print(style.RED + "Error : Invalid command\n" + style.RESET)
 
 def WrongLanguageError():
-    print(Fore.RED + "Error : No such language found\n" + Style.RESET_ALL)
+    print(style.RED + "Error : No such language found\n" + style.RESET)
 
 def WrongWordError():
-    print(Fore.RED + f"Error : {path[-2].capitalize()} dictionary does not contain such words\n" + Style.RESET_ALL)
+    print(style.RED + f"Error : {path[-2].capitalize()} dictionary does not contain such words\n" + style.RESET)
 
 def LanguageAlreadyExistError(language):
-    print(Fore.RED + f"Error : the language '{language.capitalize()}' already exist\n")
+    print(style.RED + f"Error : the language '{language.capitalize()}' already exist\n")
 
 def LanguageNotExistError(language):
-    print(Fore.RED + f"Error : the language '{language.capitalize()}' does not exist\n")
+    print(style.RED + f"Error : the language '{language.capitalize()}' does not exist\n")
 
 def WordAlreadyExistError(word, language):
-    print(Fore.RED + f"Error : '{word}' already exists in the {language.capitalize()} dictionary\n" + Style.RESET_ALL)
+    print(style.RED + f"Error : '{word}' already exists in the {language.capitalize()} dictionary\n" + style.RESET)
 
 def WordNotExistError(word, language):
-    print(Fore.RED + f"Error : '{word}' does not exist in the {language.capitalize()} dictionary\n")
+    print(style.RED + f"Error : '{word}' does not exist in the {language.capitalize()} dictionary\n")
 
 
 def HomonymAlreadyExistError(homonym):
     print(f"Error : can't add '{homonym}', it already exists\n")
 
 def WrongInputFormatError():
-    print(Fore.RED + "Error : Invalid input\n" + Style.RESET_ALL)
+    print(style.RED + "Error : Invalid input\n" + style.RESET)
 
 
 
@@ -190,11 +190,11 @@ def add_languages(command):
 
     else:
         confirm = input(
-            f"Add {Fore.LIGHTGREEN_EX + language.capitalize() + Style.RESET_ALL} ?\nType 'y' or 'yes' to confirm : ")
+            f"Add {style.LIGHT_GREEN + language.capitalize() + style.RESET} ?\nType 'y' or 'yes' to confirm : ")
         if confirm.lower() in yes:
             mkdir(language_path)
             open(language_path + "/words.json", "w").close()
-            print(f"{Fore.LIGHTGREEN_EX + language.capitalize() + Style.RESET_ALL} added successfully !\n")
+            print(f"{style.LIGHT_GREEN + language.capitalize() + style.RESET} added successfully !\n")
 
         else:
             print(f"Addition canceled\n")
@@ -222,13 +222,13 @@ def delete_languages(command):
 
         if not isdir(language_path):
             print(
-                f"{Fore.RED + 'Error' + Style.RESET_ALL} : '{Fore.LIGHTGREEN_EX + language.capitalize() + Style.RESET_ALL}' language does not exist\n")
+                f"{style.RED + 'Error' + style.RESET} : '{style.LIGHT_GREEN + language.capitalize() + style.RESET}' language does not exist\n")
         else:
             confirm = input(
-                f"Delete {Fore.LIGHTGREEN_EX + language.capitalize() + Style.RESET_ALL} ?\nType 'y' or 'yes' to confirm : ")
+                f"Delete {style.LIGHT_GREEN + language.capitalize() + style.RESET} ?\nType 'y' or 'yes' to confirm : ")
             if confirm.lower() in yes:
                 rmtree(language_path)
-                print(f"{Fore.LIGHTGREEN_EX + language.capitalize() + Style.RESET_ALL} deleted successfully !\n")
+                print(f"{style.LIGHT_GREEN + language.capitalize() + style.RESET} deleted successfully !\n")
 
             else:
                 print(f"deletion canceled\n")
@@ -265,7 +265,7 @@ def show_languages(command,printable = True):
         return False
 
     if printable:
-        print(Fore.LIGHTGREEN_EX + " ".join(all_languages) + Style.RESET_ALL + "\n")
+        print(style.LIGHT_GREEN + " ".join(all_languages) + style.RESET + "\n")
 
     return True
 
@@ -287,7 +287,7 @@ def show_inLanguage(command, printable = True):
         return False
 
     if printable:
-        print(Fore.LIGHTGREEN_EX + " ".join(map(lambda file : remove_extension(file),all_files)) + Style.RESET_ALL + "\n")
+        print(style.LIGHT_GREEN + " ".join(map(lambda file : remove_extension(file),all_files)) + style.RESET + "\n")
 
     return True
 
@@ -341,23 +341,23 @@ help = {
 # TODO complete help command
 def help_words(command):
     print(f"""┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│_____________________________________{Fore.GREEN}Welcome to Words help utility!{Style.RESET_ALL}__________________________________________│
+│_____________________________________{style.GREEN}Welcome to Words help utility!{style.RESET}__________________________________________│
 │                                                                                                             │
 │                                                                                                             │
 │Enter the name of any supported command to either add, update, show or delete words from the dictionnary.    │
-│{Fore.CYAN}__supported commands__{Style.RESET_ALL}                                                                                       │
-│    {Fore.LIGHTGREEN_EX}__add__{Style.RESET_ALL}                                                                                                  │
-│        \\\\__command_line example__//{Style.RESET_ALL}                                                                         │
-│            {Fore.BLUE}/languages/english/words${Style.RESET_ALL} add beautiful -t adjective -s attractive,pretty,pleasing -a ugly       │
+│{style.CYAN}__supported commands__{style.RESET}                                                                                       │
+│    {style.LIGHT_GREEN}__add__{style.RESET}                                                                                                  │
+│        \\\\__command_line example__//{style.RESET}                                                                         │
+│            {style.BLUE}/languages/english/words${style.RESET} add beautiful -t adjective -s attractive,pretty,pleasing -a ugly       │
 │                                                                                                             │
-│        \\\\__arguments__//{Style.RESET_ALL}                                                                                    │
-│            the command {Fore.LIGHTGREEN_EX}'add'{Style.RESET_ALL} has only one argument                                                          │
+│        \\\\__arguments__//{style.RESET}                                                                                    │
+│            the command {style.LIGHT_GREEN}'add'{style.RESET} has only one argument                                                          │
 │                                                                                                             │
-│                __wordname__{Style.RESET_ALL}                                                                                 │
+│                __wordname__{style.RESET}                                                                                 │
 │                    the name of the word needed to be added into the dictionary                              │
 │                                                                                                             │
-│        \\\\__parameters__//{Style.RESET_ALL}                                                                                   │
-│            the command {Fore.LIGHTGREEN_EX}'add'{Style.RESET_ALL} has 5 different parameters (they are all optional)                             │
+│        \\\\__parameters__//{style.RESET}                                                                                   │
+│            the command {style.LIGHT_GREEN}'add'{style.RESET} has 5 different parameters (they are all optional)                             │
 │                                                                                                             │
 │            -d    set a definition to the word                                                               │
 │            -t    set the type of the word (verb, noun, adjective, adverb, ...)                              │
@@ -440,7 +440,7 @@ def show_words(command, printable = True):
 
     for word in words:
 
-        print(Fore.LIGHTGREEN_EX + word + Style.RESET_ALL + "\n")
+        print(style.LIGHT_GREEN + word + style.RESET + "\n")
 
         word = open_file["file"][word]
 
@@ -504,7 +504,7 @@ functions = {"add_languages": add_languages, "delete_languages": delete_language
              "show_words": show_words, "save_words": save_words
              }
 
-print(Fore.BLUE + "/" + "/".join(path) + "$ " + Style.RESET_ALL)
+print(style.BLUE + "/" + "/".join(path) + "$ " + style.RESET)
 command = input()
 
 start = perf_counter()
@@ -529,10 +529,9 @@ while command != "quit":
             save(open_file)
             WrongCommandError()
 
-    print(Fore.BLUE + "/" + "/".join(path) + "$ " + Style.RESET_ALL)
+    print(style.BLUE + "/" + "/".join(path) + "$ " + style.RESET)
     command = input()
 
 print(str(perf_counter() - start) + "\n")
 
 save(open_file)
-
