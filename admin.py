@@ -397,10 +397,46 @@ def add_words(command):
         WordAlreadyExistError(word, path[-2])
         return False
 
-    open_file["file"][command["command"][0]] = command["parameters"]
+    open_file["file"][word.lower()] = command["parameters"]
+    print(f"'{style.LIGHT_GREEN + word + style.RESET}' added to the dictionary!\n")
 
     return True
 
+
+def feed_words(command):
+    words_path = getcwd() + "/" + "/".join(path) + ".json"
+
+    if len(path) < 2:
+        WrongPathError()
+        return False
+
+    if len(command["command"]) < 1:
+        WrongArgumentError()
+        return False
+
+    if open_file["name"] != words_path:
+        with open(words_path, 'r') as in_file:
+            try:
+                data = json.loads(in_file.read())
+
+            except JSONDecodeError:
+                data = dict()
+
+        open_file["name"] = words_path
+        open_file["file"] = data
+
+    text = " ".join(command["command"])
+    text = ("".join(list(filter(lambda x : x.isalpha() or x == ' ', text.lower())))).split()
+
+    new_words = 0
+
+    for word in text:
+        if word not in open_file["file"]:
+            open_file["file"][word] = dict()
+            new_words += 1
+
+    print(f"This text added {style.LIGHT_GREEN + str(new_words) + style.RESET} new words to the dictionary!\n")
+    return True
 
 def show_words(command, printable = True):
     words_path = getcwd() + "/" + "/".join(path) + ".json"
@@ -409,7 +445,8 @@ def show_words(command, printable = True):
         WrongPathError()
         return False
 
-    if len(command['command']) != 1:
+
+    if len(command['command']) > 1:
         WrongArgumentError()
         return False
 
@@ -422,6 +459,11 @@ def show_words(command, printable = True):
 
         open_file["name"] = words_path
         open_file["file"] = data
+
+
+    if len(command["command"]) == 0:
+        print(style.LIGHT_GREEN + str(len(open_file["file"])) + " word\n")
+        return True
 
     if len(open_file["file"]) == 0:
         print("Dictionary is empty\n")
@@ -459,6 +501,8 @@ def show_words(command, printable = True):
         if 'a' in parameters and 'a' in word:
             print(f"Antonyms : {word['a']}\n")
 
+        print("_"*26+"\n")
+
     if len(words) == 0:
         print("Couldn't find what you're searching for\n")
         return False
@@ -493,13 +537,13 @@ def update_words(command):
         WordNotExistError(word, path[-2])
         return False
 
-    open_file["file"][command["command"][0]] = {**open_file["file"][command["command"][0]], **command["parameters"]}
+    open_file["file"][command["command"][0].lower()] = {**open_file["file"][command["command"][0]], **command["parameters"]}
     return True
 
 
 functions = {"add_languages": add_languages, "delete_languages": delete_languages, "show_languages": show_languages, "help_languages" : help_languages,
              "show_inLanguage" : show_inLanguage,
-             "add_words": add_words, "delete_words": delete_words, "update_words": update_words,
+             "add_words": add_words, "delete_words": delete_words, "update_words": update_words,"feed_words" : feed_words,
              "help_words": help_words,
              "show_words": show_words, "save_words": save_words
              }
