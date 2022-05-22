@@ -191,7 +191,7 @@ def distance_consonants(consonant1, consonant2):
                 d = parents2.get(consonant1, d)
                 return d
         elif consonant2 in consonants:
-        
+            # use only one way distance since we want to check similarity to the dictionary and not the reversed direction
             d = min((consonants[consonant1].get(consonant2, d), consonants[consonant2].get(consonant1, d)))
             return d
 
@@ -213,6 +213,7 @@ def syllables(word):
             syllable += word[i]
             is_vowel = True
             while i + 1 < n and word[i + 1] in vowels:
+
                 syllable += word[i + 1]
                 i += 1
 
@@ -254,13 +255,7 @@ def distance(word1, word2):
         syllable1 = syllables1[i] if i < n else ""
         syllable2 = syllables2[i] if i < m else ""
 
-        if i % 2 == 0:
-
-
-            d += distance_all_vowels(syllable1, syllable2)
-
-        else:
-            d += distance_consonants(syllable1, syllable2)
+        d+=min(distance_all_vowels(syllable1, syllable2), distance_consonants(syllable1, syllable2))
 
         i += 1
 
@@ -279,7 +274,7 @@ def closest_word(target_word, dictionary):
             min_distance = d
             closest = word
 
-        if d <= 2*len(target_word):
+        if d <= len(target_word):
             return word
 
     return closest
@@ -289,5 +284,7 @@ if __name__ == "__main__":
     from time import perf_counter
 
     start = perf_counter()
+
+    print(distance("bare","yare"))
 
     print(perf_counter() - start)
