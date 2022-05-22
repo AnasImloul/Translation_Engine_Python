@@ -1,5 +1,6 @@
 import os
-from Syllables import closest_word
+from Syllables import closest_word as sound_closest,distance as sound_distance
+from typos import closest_word as typo_closest
 import json
 
 words = "words.json"
@@ -23,13 +24,24 @@ def english_dictionary():
     return english
 
 
-def closest(word, dictionary):
-    return closest_word(word, dictionary)
+
 
 def correct(sentence, dictionary):
-    words = sentence.split()
+    words = (sentence.lower()).split()
 
     for i in range(len(words)):
-        words[i] = closest(words[i], dictionary)
+        typo_correct = typo_closest(words[i], dictionary)
+
+        if sound_distance(typo_correct, words[i]) < len(words[i]):
+            words[i] = typo_correct
+            continue
+
+        sound_correct = sound_closest(words[i], dictionary)
+
+        if sound_closest(sound_correct, words[i]) < sound_closest(typo_correct, words[i]):
+            words[i] = sound_correct
+        else:
+            words[i] = typo_correct
+
 
     return " ".join(words)
