@@ -1,5 +1,5 @@
 import os
-from Syllables import closest_word as close1
+from syllables import closest_word as close1
 import json
 
 words = "words.json"
