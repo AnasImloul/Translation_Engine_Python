@@ -19,6 +19,8 @@ for corrected_word,correct_word in zip(corrected.split(),correct_sentence.split(
     correct_count += corrected_word==correct_word
 
 print(f"correction precision : {round(correct_count/len(correct_sentence.split())*100,2)}%")
+#correction precision : 92.63%
 
 
 print(f"Auto-corrected a text containing {len(correct_sentence.split())} words in {(perf_counter() - start)} seconds.")
+#Auto-corrected a text containing 95 words in 4.73588811099944 seconds.
