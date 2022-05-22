@@ -7,11 +7,11 @@ composite_consonants = {
     "ck": {"k": 1, "q": 1},
     "ng": {"n": 1, "g": 1},
     "sk": {"sc": 2},
-    "ss" : {"s":1}
+    #"ss" : {"s":1}
 }
 
 consonants = {
-    'b': {"p": 1, "v": 2},
+    'b': {"p": 3, "v": 3},
     'c': {},
     'd': {},
     'f': {},
@@ -25,7 +25,7 @@ consonants = {
     'p': {},
     'q': {"c": 2, "k": 3},
     'r': {},
-    's': {"c": 1, "z": 2},
+    's': {"c": 3, "z": 2},
     't': {},
     'v': {},
     'w': {},
@@ -53,6 +53,11 @@ composite_vowels = {
     "ea": {"e": 1, "": 1, "a": 2, "i": 3},
     "ae": {"e": 1, "a": 2, "i": 3, "": 3},
     "oe": {"e": 1, "o": 2, "": 3},
+    "ee":{"e":1},
+    "oo":{"o":1},
+    "ii":{"i":1},
+    "aa":{"a":1},
+    "oo":{"o":1}
 }
 
 all_vowels = {**vowels, **composite_vowels}
@@ -156,6 +161,19 @@ def distance_consonants(consonant1, consonant2):
         return 0
 
 
+
+    if len(consonant1) == 2:
+        if len(consonant2) == 1:
+            if consonant1 == 2*consonant2:
+                return 1
+
+    if len(consonant2) == 2:
+        if len(consonant1) == 1:
+            if consonant2 == 2*consonant1:
+                return 1
+
+
+
     parents1 = {}
     parents2 = {}
 
@@ -195,7 +213,7 @@ def distance_consonants(consonant1, consonant2):
 
 def syllables(word):
     _syllables_ = []
-    is_vowel = True
+    is_vowel = False
 
     n = len(word)
 
@@ -215,7 +233,6 @@ def syllables(word):
             syllable = ""
 
         else:
-
             if not is_vowel:
                 if word[i] == "y":
                     _syllables_.append("y")
@@ -228,7 +245,7 @@ def syllables(word):
 
             syllable += word[i]
 
-            while i + 1 < n and syllable + word[i + 1] in _consonants_:
+            while i + 1 < n and (syllable + word[i + 1] in _consonants_ or syllable == word[i+1]):
                 syllable += word[i + 1]
                 i += 1
             _syllables_.append(syllable)
@@ -250,12 +267,12 @@ def distance(word1, word2):
         syllable1 = syllables1[i] if i < n else ""
         syllable2 = syllables2[i] if i < m else ""
 
-        if i % 2:
+        if i % 2 == 0:
+
 
             d += distance_all_vowels(syllable1, syllable2)
 
         else:
-
             d += distance_consonants(syllable1, syllable2)
 
         i += 1
@@ -272,9 +289,9 @@ if __name__ == "__main__":
 
     start = perf_counter()
 
-    print(syllables("yoyoy"))
-    print(syllables("pusi"))
-    print(distance("pussy", "pusi"))
+    print(syllables("s"))
+    print(syllables("ss"))
+    print(distance("ss", "s"))
     print(distance("pose","pusi"))
 
     print(perf_counter() - start)
