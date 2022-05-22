@@ -1,10 +1,10 @@
 import os
-from syllables import closest_word as close1
+from Syllables import closest_word
 import json
 
 words = "words.json"
 
-path = os.getcwd() + "/";
+path = os.getcwd() + "/"
 
 ENGLISH = "languages/english/"
 
@@ -24,8 +24,7 @@ def english_dictionary():
 
 
 def closest(word, dictionary):
-    closest1 = close1(word, dictionary)
-    return closest1
+    return closest_word(word, dictionary)
 
 def correct(sentence, dictionary):
     words = sentence.split()
