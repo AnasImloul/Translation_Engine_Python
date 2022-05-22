@@ -191,7 +191,7 @@ def distance_consonants(consonant1, consonant2):
                 d = parents2.get(consonant1, d)
                 return d
         elif consonant2 in consonants:
-            # use only one way distance since we want to check similarity to the dictionary and not the reversed direction
+        
             d = min((consonants[consonant1].get(consonant2, d), consonants[consonant2].get(consonant1, d)))
             return d
 
@@ -279,7 +279,7 @@ def closest_word(target_word, dictionary):
             min_distance = d
             closest = word
 
-        if d <= len(target_word):
+        if d <= 2*len(target_word):
             return word
 
     return closest
